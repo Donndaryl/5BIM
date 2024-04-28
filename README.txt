@@ -11,5 +11,5 @@ https://www.youtube.com/watch?v=qP6g6UZjOVY&t=1938s
 # Identification
 
 Pour lancer le programme il suffit de remplacer le chemin actuel cap=cv2.VideoCapture("video/video1.mp4"), par 
-celui la video presente sur votre machine et se rassurer que le dossier trainner se trouve au même niveau 
+celui la video presente sur votre machine et se rassurer que le dossier trainner se trouve dans le même repertoire 
 que le programme identification

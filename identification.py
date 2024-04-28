@@ -3,15 +3,22 @@ import cv2
 import pickle
 import numpy as np
 import os
-
+a = {}
 face_cascade= cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
-recognizer=cv2.face.LBPHFaceRecognizer_create()
-#recognizer.read("trainner.yml")
-recognizer.read(os.path.join("trainner/","jule.yml"))
+for root, dirs, files in os.walk("trainner/"):
+    for file in files:
+        filename, ext = os.path.splitext(file)
+        a[filename] = cv2.face.LBPHFaceRecognizer_create()
+
+
+for k,v in a.items(): 
+    v.read(os.path.join("trainner",k+".yml"))
+
 id_image=0
 color_info=(255, 255, 255)
 color_ko=(0, 0, 255)
 color_ok=(0, 255, 0)
+label = ""
 
 with open("labels.pickle", "rb") as f:
     og_labels=pickle.load(f)
@@ -19,27 +26,35 @@ with open("labels.pickle", "rb") as f:
 
 cap=cv2.VideoCapture("video/video.mp4")
 while True:
+
     ret, frame=cap.read()
     tickmark=cv2.getTickCount()
     gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces=face_cascade.detectMultiScale(gray, scaleFactor=1.2,minNeighbors=4, minSize=(50, 50))
+
     for (x, y, w, h) in faces:
         roi_gray=cv2.resize(gray[y:y+h, x:x+w], (50, 50))
-        id_, conf=recognizer.predict(roi_gray)
-        print(id_)
-        print(conf)
-        if conf<=95:
-            color=color_ok
-            name=labels[id_]
-        else:
-            color=color_ko
-            name="Inconnu"
+
+        for k,v in a.items() :
+            id_, conf = v.predict(roi_gray)
+            if conf > 95:
+                color=color_ko
+                name="Inconnue"
+            else:
+                color=color_ok
+                name=str(k)
+                break
+                
+              
         label=name+" "+'{:5.2f}'.format(conf)
+
         cv2.putText(frame, label, (x, y-10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
         cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
+
     fps=cv2.getTickFrequency()/(cv2.getTickCount()-tickmark)
     cv2.putText(frame, "FPS: {:05.2f}".format(fps), (10, 30), cv2.FONT_HERSHEY_PLAIN, 2, color_info, 2)
     cv2.imshow('L42Project', frame)
+
     key=cv2.waitKey(1)&0xFF
     if key==ord('q'):
         break

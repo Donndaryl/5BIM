@@ -2,10 +2,12 @@
 import cv2
 import pickle
 import numpy as np
+import os
 
 face_cascade= cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
 recognizer=cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("trainner.yml")
+#recognizer.read("trainner.yml")
+recognizer.read(os.path.join("trainner/","jule.yml"))
 id_image=0
 color_info=(255, 255, 255)
 color_ko=(0, 0, 255)
@@ -24,6 +26,8 @@ while True:
     for (x, y, w, h) in faces:
         roi_gray=cv2.resize(gray[y:y+h, x:x+w], (50, 50))
         id_, conf=recognizer.predict(roi_gray)
+        print(id_)
+        print(conf)
         if conf<=95:
             color=color_ok
             name=labels[id_]

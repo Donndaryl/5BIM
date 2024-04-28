@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 import pickle
-
+id_to_name = {}
 image_dir="./image_classe/"
 
 for folder in os.listdir(image_dir):

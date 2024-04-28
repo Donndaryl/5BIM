@@ -24,7 +24,7 @@ with open("labels.pickle", "rb") as f:
     og_labels=pickle.load(f)
     labels={v:k for k, v in og_labels.items()}
 
-cap=cv2.VideoCapture("video/video.mp4")
+cap=cv2.VideoCapture("video/video1.mp4")
 while True:
 
     ret, frame=cap.read()

@@ -3,7 +3,7 @@ import operator
 import os
 
 
-video="video/video.mp4"
+video="video/video1.mp4"
 cascade="./haarcascade_frontalface_alt2.xml"
 img_non_classe='img_non_classe'
 
